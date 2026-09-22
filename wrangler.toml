@@ -1,0 +1,5 @@
+# Cloudflare Pages configuration
+# Deploy: npx wrangler pages deploy  (first time: npx wrangler login)
+name = "muhammad-awais-portfolio"
+pages_build_output_dir = "public"
+compatibility_date = "2026-09-13"

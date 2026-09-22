@@ -1,0 +1,767 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Muhammad Awais — Systems in Production</title>
+<meta name="description" content="Full-stack engineer and software architect. Multi-tenant platforms, production infrastructure, and the abstractions that hold a large codebase together.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Public+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --paper:    #F1F4F4;
+    --surface:  #FFFFFF;
+    --ink:      #0F1619;
+    --ink-soft: #3A474C;
+    --muted:    #6C7B81;
+    --rule:     #D7DFE0;
+    --rule-soft:#E5EAEB;
+    --accent:   #0D5F67;
+    --accent-2: #128692;
+    --glow:     rgba(13, 95, 103, 0.09);
+
+    --f-display: "Newsreader", Georgia, "Times New Roman", serif;
+    --f-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    --gutter: clamp(20px, 5vw, 64px);
+    color-scheme: light;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:    #0A1012;
+      --surface:  #111A1D;
+      --ink:      #E7EEEF;
+      --ink-soft: #B3C1C5;
+      --muted:    #7D8E93;
+      --rule:     #222E31;
+      --rule-soft:#1A2427;
+      --accent:   #57C6CF;
+      --accent-2: #8AD9E0;
+      --glow:     rgba(87, 198, 207, 0.10);
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:    #0A1012;
+    --surface:  #111A1D;
+    --ink:      #E7EEEF;
+    --ink-soft: #B3C1C5;
+    --muted:    #7D8E93;
+    --rule:     #222E31;
+    --rule-soft:#1A2427;
+    --accent:   #57C6CF;
+    --accent-2: #8AD9E0;
+    --glow:     rgba(87, 198, 207, 0.10);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  img { max-width: 100%; }
+  [hidden] { display: none !important; }
+
+  a { color: var(--accent); }
+
+  .wrap {
+    max-width: 1080px;
+    margin-inline: auto;
+    padding-inline: var(--gutter);
+  }
+
+  /* ============ eyebrow ============ */
+
+  .eyebrow {
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 18px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .eyebrow::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: var(--rule);
+  }
+
+  /* ============ hero ============ */
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    border-bottom: 1px solid var(--rule);
+    background:
+      radial-gradient(120% 90% at 82% 0%, var(--glow), transparent 62%);
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(to right, var(--rule-soft) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--rule-soft) 1px, transparent 1px);
+    background-size: 68px 68px;
+    -webkit-mask-image: radial-gradient(100% 78% at 50% 22%, #000 25%, transparent 78%);
+    mask-image: radial-gradient(100% 78% at 50% 22%, #000 25%, transparent 78%);
+    pointer-events: none;
+  }
+
+  .hero .wrap {
+    position: relative;
+    padding-block: clamp(56px, 11vw, 116px) clamp(48px, 9vw, 96px);
+  }
+
+  .hero-name {
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 26px;
+  }
+
+  h1 {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: clamp(2.3rem, 6.6vw, 4.5rem);
+    line-height: 1.04;
+    letter-spacing: -0.024em;
+    margin: 0;
+    max-width: 17ch;
+    text-wrap: balance;
+  }
+
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    margin: 26px 0 0;
+    font-size: clamp(1rem, 1.9vw, 1.16rem);
+    color: var(--ink-soft);
+    max-width: 58ch;
+    line-height: 1.62;
+  }
+
+  .hero-meta {
+    margin: 34px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 10px;
+  }
+
+  .tag {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-soft);
+    border: 1px solid var(--rule);
+    background: var(--surface);
+    border-radius: 999px;
+    padding: 5px 13px;
+  }
+
+  /* ============ sections ============ */
+
+  section { border-bottom: 1px solid var(--rule); }
+  section:last-of-type { border-bottom: 0; }
+
+  .band { padding-block: clamp(48px, 8vw, 88px); }
+
+  .statement {
+    font-family: var(--f-display);
+    font-size: clamp(1.3rem, 3.1vw, 1.92rem);
+    line-height: 1.38;
+    letter-spacing: -0.012em;
+    margin: 0;
+    max-width: 26ch;
+    text-wrap: balance;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: clamp(28px, 5vw, 64px);
+    align-items: start;
+  }
+
+  .split p {
+    margin: 0 0 15px;
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
+
+  .split p:last-child { margin-bottom: 0; }
+
+  /* ============ work ============ */
+
+  .work { display: grid; gap: clamp(28px, 4vw, 44px); }
+
+  .case {
+    display: grid;
+    grid-template-columns: 210px minmax(0, 1fr);
+    gap: clamp(20px, 4vw, 48px);
+    padding-top: 30px;
+    border-top: 1px solid var(--rule);
+  }
+
+  .case:first-child { border-top: 0; padding-top: 0; }
+
+  .case-id h3 {
+    font-family: var(--f-display);
+    font-size: clamp(1.45rem, 3vw, 1.86rem);
+    font-weight: 600;
+    letter-spacing: -0.016em;
+    margin: 0;
+    line-height: 1.12;
+  }
+
+  .case-role {
+    font-family: var(--f-mono);
+    font-size: 0.69rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 9px 0 0;
+  }
+
+  .case-body > p {
+    margin: 0 0 16px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  .facts { list-style: none; margin: 0; padding: 0; display: grid; gap: 9px; }
+
+  .facts li {
+    position: relative;
+    padding-left: 20px;
+    color: var(--ink-soft);
+    max-width: 62ch;
+  }
+
+  .facts li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.66em;
+    width: 9px;
+    height: 1px;
+    background: var(--accent);
+  }
+
+  .facts strong { color: var(--ink); font-weight: 600; }
+
+  .chips {
+    margin: 18px 0 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .chip {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    color: var(--muted);
+    border: 1px solid var(--rule-soft);
+    border-radius: 4px;
+    padding: 3px 8px;
+  }
+
+  /* ============ portfolio strip ============ */
+
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 1px;
+    background: var(--rule);
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .strip article {
+    background: var(--surface);
+    padding: 20px 20px 22px;
+  }
+
+  .strip h4 {
+    margin: 0 0 6px;
+    font-family: var(--f-mono);
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    color: var(--ink);
+  }
+
+  .strip p {
+    margin: 0;
+    font-size: 0.87rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* ============ capability grid ============ */
+
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: clamp(22px, 3.4vw, 40px);
+  }
+
+  .cap h3 {
+    margin: 0 0 8px;
+    font-size: 1.02rem;
+    font-weight: 600;
+    letter-spacing: -0.006em;
+    display: flex;
+    gap: 10px;
+    align-items: baseline;
+  }
+
+  .cap h3 span {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    color: var(--accent);
+    letter-spacing: 0.08em;
+  }
+
+  .cap p { margin: 0; color: var(--ink-soft); max-width: 54ch; }
+
+  /* ============ stack table ============ */
+
+  .stack-table { display: grid; gap: 0; }
+
+  .stack-row {
+    display: grid;
+    grid-template-columns: 148px minmax(0, 1fr);
+    gap: 24px;
+    padding-block: 13px;
+    border-top: 1px solid var(--rule-soft);
+    align-items: baseline;
+  }
+
+  .stack-row:first-child { border-top: 0; }
+
+  .stack-row dt {
+    font-family: var(--f-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .stack-row dd {
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 0.94rem;
+    line-height: 1.7;
+  }
+
+  /* ============ contact ============ */
+
+  .contact-band {
+    background: var(--surface);
+    border-top: 1px solid var(--rule);
+  }
+
+  .contact-inner {
+    padding-block: clamp(48px, 8vw, 84px);
+    display: grid;
+    gap: 30px;
+  }
+
+  .contact-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 12px;
+  }
+
+  .contact-links a {
+    font-family: var(--f-mono);
+    font-size: 0.82rem;
+    text-decoration: none;
+    color: var(--ink);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 9px 18px;
+    transition: border-color .18s ease, color .18s ease, background-color .18s ease;
+  }
+
+  .contact-links a:hover,
+  .contact-links a:focus-visible {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--paper);
+  }
+
+  footer {
+    border-top: 1px solid var(--rule);
+    padding-block: 24px 32px;
+    font-family: var(--f-mono);
+    font-size: 0.7rem;
+    color: var(--muted);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 20px;
+    justify-content: space-between;
+  }
+
+  :where(a, button):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ============ theme toggle ============ */
+
+  .toggle {
+    position: fixed;
+    top: calc(14px + env(safe-area-inset-top, 0px));
+    right: 14px;
+    z-index: 20;
+    font-family: var(--f-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 7px 13px;
+    cursor: pointer;
+  }
+
+  .toggle:hover { color: var(--accent); border-color: var(--accent); }
+
+  /* ============ responsive ============ */
+
+  @media (max-width: 860px) {
+    .split { grid-template-columns: minmax(0, 1fr); }
+    .case { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .stack-row { grid-template-columns: minmax(0, 1fr); gap: 3px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+  }
+
+  @media print {
+    .toggle, .hero::before { display: none; }
+    body { background: #fff; color: #000; }
+  }
+</style>
+</head>
+<body>
+
+<button class="toggle" id="theme-toggle" type="button" aria-label="Switch colour theme">Theme</button>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="hero-name">Muhammad Awais · Full-Stack Engineer &amp; Architect</p>
+    <h1>I build systems that <em>survive</em> contact with production.</h1>
+    <p class="hero-sub">Six years turning business requirements into running software — 20+ websites and 5+ full-stack applications in production — architecture, backend, frontend, databases, infrastructure, deployment, and the debugging that happens at 2am when something upstream breaks.</p>
+    <div class="hero-meta">
+      <span class="tag">Multi-tenant platforms</span>
+      <span class="tag">NestJS · PostgreSQL</span>
+      <span class="tag">React · TypeScript</span>
+      <span class="tag">Docker · AWS</span>
+      <span class="tag">MCP &amp; AI tooling</span>
+    </div>
+  </div>
+</header>
+
+<section class="band">
+  <div class="wrap split">
+    <p class="statement">Most engineers stop at the feature. I own the whole path to production.</p>
+    <div>
+      <p>My work centres on systems where the backend carries real business rules rather than shuttling database rows — billing and subscription lifecycles, multi-tenancy, background processing, audit trails, and integrations that fail in interesting ways.</p>
+      <p>I design for the second year of a codebase, not the first sprint. Shared contracts so an API change breaks the build instead of production. Composable feature bundles so the tenth feature costs less than the third. Cross-cutting concerns built once as infrastructure, not re-implemented per feature.</p>
+      <p>And I stay responsible after the deploy — containers, certificates, DNS, database migrations against live data, and the failures that look like application bugs until you trace them down a layer.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">Selected work</p>
+    <div class="work">
+
+      <article class="case">
+        <div class="case-id">
+          <h3>Payback Billing</h3>
+          <p class="case-role">Architect &amp; lead engineer</p>
+        </div>
+        <div class="case-body">
+          <p>A multi-tenant billing and business-operations platform serving multiple businesses from one system, owned from first architecture decision through to live operation.</p>
+          <ul class="facts">
+            <li>Runs the full commercial cycle — clients, subscriptions, invoicing, <strong>multi-currency pricing</strong>, purchasing, inventory, staff and support.</li>
+            <li>Every business's data and permissions kept fully separate, with access control built once and inherited everywhere.</li>
+            <li>Stays responsive under load: long-running jobs and large uploads process in the background with live progress reporting.</li>
+            <li>Deployed on AWS and <strong>migrated between hosting providers</strong> with no data loss and minimal downtime.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">TypeScript</span><span class="chip">NestJS</span><span class="chip">PostgreSQL</span><span class="chip">Redis</span><span class="chip">React</span><span class="chip">Astro</span><span class="chip">Docker</span><span class="chip">AWS</span>
+          </div>
+        </div>
+      </article>
+
+      <article class="case">
+        <div class="case-id">
+          <h3>DragSense</h3>
+          <p class="case-role">Creator · Independent</p>
+        </div>
+        <div class="case-body">
+          <p>A platform that lets non-developers build working applications — CRMs, dashboards, internal tools — by describing their data and rules instead of writing code.</p>
+          <ul class="facts">
+            <li>Users define entities, relationships, fields and permissions once; <strong>the interface builds itself</strong> from those definitions at runtime.</li>
+            <li>Each organisation gets an isolated workspace with its own roles, branding and access rules.</li>
+            <li>Relational and document databases used side by side — structural integrity where it matters, flexibility where users define the shape.</li>
+          </ul>
+          <div class="chips">
+            <span class="chip">NestJS</span><span class="chip">PostgreSQL</span><span class="chip">MongoDB</span><span class="chip">React</span><span class="chip">Tailwind</span>
+          </div>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">Commercial work</p>
+    <div class="strip">
+      <article>
+        <h4>Multi-tenant SaaS</h4>
+        <p>Client-facing platforms with isolated workspaces, role-based access and their own marketing sites.</p>
+      </article>
+      <article>
+        <h4>Data &amp; reporting systems</h4>
+        <p>Scheduled file-transfer and reporting services with queue-backed jobs and operations dashboards.</p>
+      </article>
+      <article>
+        <h4>Shared platform foundation</h4>
+        <p>A reusable monorepo, deploy CLI and container setup, so each new product starts with deployment already solved.</p>
+      </article>
+      <article>
+        <h4>Team engineering</h4>
+        <p>GitHub organisation, review workflow, environments and releases across the product portfolio.</p>
+      </article>
+    </div>
+    <p style="margin:18px 0 0;font-size:0.88rem;color:var(--muted);max-width:60ch;">Client and product names withheld. Happy to walk through specifics in conversation.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Platform foundation</p>
+      <p class="statement">One contracts-first monorepo, reused as the starting point for every new product.</p>
+    </div>
+    <div>
+      <p>Five packages share a single type system. A contracts package holds every domain's types, enums and schemas; the API and the client both compile against it. Break an API shape and the build fails instead of production. Every other decision hangs off that one.</p>
+      <p>What it removes from day one of a new product: wiring up deployment, environments, auth, tenancy, permissions and access control. Those are solved in the foundation, which is why it became the shape the whole portfolio is built on rather than each product starting from scratch.</p>
+    </div>
+  </div>
+
+  <div class="wrap" style="margin-top:clamp(28px,4vw,44px)">
+    <dl class="stack-table">
+      <div class="stack-row"><dt>contracts</dt><dd>Shared types, enums, Zod schemas and list helpers — the single source of truth both sides compile against.</dd></div>
+      <div class="stack-row"><dt>server</dt><dd>NestJS API with TypeORM and versioned migrations.</dd></div>
+      <div class="stack-row"><dt>client</dt><dd>React Router v7 application.</dd></div>
+      <div class="stack-row"><dt>website</dt><dd>Astro marketing site for the product.</dd></div>
+      <div class="stack-row"><dt>mcp</dt><dd>MCP server with HTTP and stdio transports, exposing typed tools, resources and prompts.</dd></div>
+      <div class="stack-row"><dt>tooling</dt><dd>CLI, Docker, deploy, environment and host-Nginx packages.</dd></div>
+    </dl>
+
+    <div class="grid-2" style="margin-top:clamp(30px,4.5vw,48px)">
+      <div class="cap">
+        <h3>A platform layer, not a folder layout <span>SERVER</span></h3>
+        <p>Tenancy, RBAC, caching, events, activity logging, file upload with pluggable storage providers, security, validation and HTTP error shaping are built once in a shared layer. A feature opts in with a decorator instead of reimplementing the concern — roughly twenty subsystems a new product never has to write again.</p>
+      </div>
+      <div class="cap">
+        <h3>Operations that compose <span>CLIENT</span></h3>
+        <p>Features export pure operation cores, then publish bundles that pages compose. A section — list, filters, row actions, modals, import, backups — is defined once and mounted wherever it is needed, scoped differently each time, with duplicate registrations rejected at compose time. This is the part that stops the tenth feature costing more than the third.</p>
+      </div>
+      <div class="cap">
+        <h3>One gateway, one command <span>OPS</span></h3>
+        <p>Nginx fronts everything and a single port is published on the host; the rest stays internal to Docker. One CLI drives bootstrap, start and stop, build, migrations, adding packages and SSH deploy. Compose covers the full service set with several client delivery modes, and environment config splits local from per-host.</p>
+      </div>
+      <div class="cap">
+        <h3>Legible to agents <span>AI</span></h3>
+        <p>The conventions are written down as the stated source of truth — README, docs and agent-readable rule files — so AI agents working in the repo converge on the existing patterns instead of drifting into their own.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Security</p>
+      <p class="statement">Defence in depth, built as shared infrastructure.</p>
+    </div>
+    <div>
+      <p>Security lives in the platform layer rather than in individual features, so it applies by default and every exception is an explicit, greppable opt-out on a single route. Most codebases have two or three of these layers; the value is in having the set apply consistently.</p>
+    </div>
+  </div>
+
+  <div class="wrap" style="margin-top:clamp(28px,4vw,44px)">
+    <div class="grid-2">
+      <div class="cap">
+        <h3>Encryption in transit and at rest <span>CRYPTO</span></h3>
+        <p>AES-256-GCM encryption of API responses between server and browser — PBKDF2-derived keys, additional authenticated data binding, and an envelope carrying a timestamp, version and checksum so tampering and replay are detectable. Applied by an interceptor, with a decorator to skip routes that must stay plaintext. Sensitive database columns are encrypted at rest too, with round-trip tests over the crypto itself.</p>
+      </div>
+      <div class="cap">
+        <h3>Request integrity <span>INPUT</span></h3>
+        <p>CSRF protection by double-submit token held in a signed, httpOnly, SameSite cookie, with a mismatch rejected outright. Parameter-pollution guarding, HTML sanitisation of input, and correct client IP resolution behind the reverse proxy.</p>
+      </div>
+      <div class="cap">
+        <h3>Browser hardening <span>HEADERS</span></h3>
+        <p>A Content Security Policy tuned per environment — frame ancestors and object sources denied, base URI and form action locked down, insecure requests upgraded in production. HSTS for a year with subdomains and preload, frame deny, no MIME sniffing, a referrer policy, a permissions policy, and the server signature removed.</p>
+      </div>
+      <div class="cap">
+        <h3>Layered access control <span>ACCESS</span></h3>
+        <p>Three guards in sequence — authentication, permission, then tenant scope — so a route cannot quietly skip tenant isolation. JWTs with refresh-token rotation, OTP flows, API keys and bcrypt hashing, behind a strict CORS allowlist with explicit allowed and exposed headers.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">How I work</p>
+    <div class="grid-2">
+      <div class="cap">
+        <h3>Composable feature bundles <span>REUSE</span></h3>
+        <p>Each feature exposes pure operation cores and publishes self-contained bundles — list, filters, actions, forms, import and export — that any page can compose. A feature is built once and reused wherever it is needed, scoped to its context rather than copied and adapted.</p>
+      </div>
+      <div class="cap">
+        <h3>Contracts before code <span>SAFETY</span></h3>
+        <p>One shared package holds every domain's types and schemas. Server and client both compile against it, so a breaking API change shows up as a failed build rather than a support ticket.</p>
+      </div>
+      <div class="cap">
+        <h3>Concerns as infrastructure <span>LEVERAGE</span></h3>
+        <p>Tenancy, permissions, caching, audit logging, events, validation and file storage live in one shared layer with pluggable providers — a decorator away from any feature, never re-implemented.</p>
+      </div>
+      <div class="cap">
+        <h3>Debugging down the stack <span>OWNERSHIP</span></h3>
+        <p>Tracing symptoms that look like application bugs to their real layer: container networking, migrations against live data, TLS certificates, reverse-proxy and DNS misconfiguration, malformed third-party payloads.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">AI engineering</p>
+      <p class="statement">Agent tooling I've shipped, not just prompted.</p>
+    </div>
+    <div>
+      <p>I built a <strong>Model Context Protocol</strong> server as a first-class package inside a production platform — dual HTTP and stdio transports, a tool registry, and typed tools, resources and prompts that reach the API through an authenticated client. It gives AI agents a governed interface to the product instead of raw database access.</p>
+      <p>Day to day I work with Claude, Claude Code and Cursor for implementation, architecture exploration and debugging unfamiliar systems, with repo conventions written as agent-readable rules so humans and AI converge on the same patterns. n8n for AI-backed workflow automation.</p>
+      <p>The useful framing: conventional engineering judgement, accelerated — from problem definition to working implementation in less time, without giving up on knowing why it works.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap split">
+    <div>
+      <p class="eyebrow">Exploration</p>
+      <p class="statement">Procedural character animation, in Unity.</p>
+    </div>
+    <div>
+      <p>An ongoing side build for a cricket simulation, where the character's body adapts to its actual environment instead of replaying fixed clips — layered inverse kinematics for foot placement and ground adaptation, hand targets, head aim, and driven hip, chest and shoulder adjustment.</p>
+      <p>It means working directly in quaternion rotation, transform-space conversion and runtime interpolation to keep joint chains stable through movement, jumping and diving. I keep it going because the hard problems there are nothing like the ones at work.</p>
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    <p class="eyebrow">Stack</p>
+    <dl class="stack-table">
+      <div class="stack-row"><dt>Languages</dt><dd>TypeScript · JavaScript · SQL · C#</dd></div>
+      <div class="stack-row"><dt>Backend</dt><dd>NestJS · Node.js · TypeORM · REST · OpenAPI · Socket.IO · Bull queues · JWT &amp; RBAC · Zod</dd></div>
+      <div class="stack-row"><dt>Web</dt><dd>HTML5 · CSS3 · responsive design · accessibility · REST &amp; WebSockets · authentication flows · SSR &amp; static generation · web performance</dd></div>
+      <div class="stack-row"><dt>Frontend</dt><dd>React · React Router v7 · Angular · TanStack Query &amp; Table · Zustand · React Hook Form · Tailwind · shadcn/ui · Vite · Astro</dd></div>
+      <div class="stack-row"><dt>Data</dt><dd>PostgreSQL · Redis · MongoDB · relational modelling · JSONB · migrations · backup &amp; restore</dd></div>
+      <div class="stack-row"><dt>Infrastructure</dt><dd>Docker &amp; Compose · Linux · Nginx · AWS EC2 · DNS · SSL/TLS · Let's Encrypt · SSH · GitHub Actions</dd></div>
+      <div class="stack-row"><dt>AI</dt><dd>MCP server development · Claude · Claude Code · Cursor · prompt engineering · n8n</dd></div>
+      <div class="stack-row"><dt>Practice</dt><dd>monorepo architecture · pnpm workspaces · shared contracts · GitHub org management · code review · release &amp; environment ownership · Vitest</dd></div>
+      <div class="stack-row"><dt>Simulation</dt><dd>Unity · Animation Rigging · procedural inverse kinematics</dd></div>
+    </dl>
+  </div>
+</section>
+
+<section class="contact-band">
+  <div class="wrap contact-inner">
+    <div>
+      <p class="eyebrow">Get in touch</p>
+      <p class="statement">Have a system that needs to reach production and stay there?</p>
+    </div>
+    <div class="contact-links">
+      <a href="mailto:awaiswork803@gmail.com">awaiswork803@gmail.com</a>
+      <a href="https://github.com/dragsense" target="_blank" rel="noopener noreferrer">GitHub</a>
+      <a href="https://www.linkedin.com/in/muhammad-awias-b58559438" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="/cv">CV</a>
+    </div>
+    <footer>
+      <span>Muhammad Awais — Islamabad, PK · remote-friendly</span>
+      <span>Available for remote and contract work</span>
+    </footer>
+  </div>
+</section>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var btn = document.getElementById('theme-toggle');
+    var saved = null;
+
+    try { saved = localStorage.getItem('awais-theme'); } catch (e) { saved = null; }
+    if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+
+    btn.addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var next;
+      if (current) {
+        next = current === 'dark' ? 'light' : 'dark';
+      } else {
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        next = prefersDark ? 'light' : 'dark';
+      }
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('awais-theme', next); } catch (e) {}
+    });
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Muhammad Awais — CV</title>
+<meta name="description" content="CV of Muhammad Awais, full-stack engineer and software architect: multi-tenant platforms, production infrastructure, MCP and AI tooling.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600&family=Public+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+
+<style>
+  :root {
+    --paper:    #FFFFFF;
+    --ink:      #0F1619;
+    --ink-soft: #3A474C;
+    --muted:    #6C7B81;
+    --rule:     #D7DFE0;
+    --rule-soft:#E5EAEB;
+    --accent:   #0D5F67;
+
+    --f-display: "Newsreader", Georgia, "Times New Roman", serif;
+    --f-body: "Public Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+    --f-mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper:    #0A1012;
+      --ink:      #E7EEEF;
+      --ink-soft: #B3C1C5;
+      --muted:    #7D8E93;
+      --rule:     #222E31;
+      --rule-soft:#1A2427;
+      --accent:   #57C6CF;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --paper:    #0A1012;
+    --ink:      #E7EEEF;
+    --ink-soft: #B3C1C5;
+    --muted:    #7D8E93;
+    --rule:     #222E31;
+    --rule-soft:#1A2427;
+    --accent:   #57C6CF;
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--rule-soft);
+    color: var(--ink);
+    font-family: var(--f-body);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: var(--accent); }
+
+  .sheet {
+    background: var(--paper);
+    max-width: 820px;
+    margin: 28px auto;
+    padding: 46px clamp(20px, 5vw, 56px) 54px;
+    box-shadow: 0 1px 3px rgba(0,0,0,.12), 0 12px 32px rgba(0,0,0,.08);
+  }
+
+  /* ============ header ============ */
+
+  .head {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 24px;
+    align-items: start;
+    padding-bottom: 22px;
+  }
+
+  h1 {
+    font-family: var(--f-display);
+    font-weight: 500;
+    font-size: 2.6rem;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    margin: 0 0 8px;
+  }
+
+  .head-sub {
+    margin: 0;
+    color: var(--ink-soft);
+    max-width: 42ch;
+    font-size: 1rem;
+  }
+
+  .head-contact {
+    font-family: var(--f-mono);
+    font-size: 0.78rem;
+    line-height: 1.85;
+    text-align: right;
+    color: var(--muted);
+  }
+
+  .head-contact a {
+    display: block;
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    width: fit-content;
+    margin-left: auto;
+  }
+
+  .head-contact a:hover { border-bottom-color: var(--accent); }
+
+  /* ============ sections ============ */
+
+  .row {
+    display: grid;
+    grid-template-columns: 124px minmax(0, 1fr);
+    gap: 28px;
+    padding-top: 22px;
+    margin-top: 22px;
+    border-top: 1px solid var(--rule);
+    break-inside: auto;
+  }
+
+  .row-label {
+    font-family: var(--f-mono);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    line-height: 1.5;
+    padding-top: 3px;
+  }
+
+  .row-body { border-left: 2px solid var(--rule-soft); padding-left: 22px; }
+
+  .lede {
+    font-family: var(--f-display);
+    font-size: 1.16rem;
+    line-height: 1.5;
+    margin: 0 0 14px;
+    color: var(--ink);
+  }
+
+  .row-body p { margin: 0 0 12px; color: var(--ink-soft); }
+  .row-body p:last-child { margin-bottom: 0; }
+  .row-body strong { color: var(--ink); font-weight: 600; }
+
+  /* ============ experience ============ */
+
+  .job { break-inside: avoid; }
+  .job + .job { margin-top: 26px; }
+
+  .job h2 {
+    font-size: 1.14rem;
+    font-weight: 400;
+    color: var(--muted);
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+
+  .job h2 b { color: var(--ink); font-weight: 700; }
+
+  .job-date {
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin: 4px 0 10px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--rule-soft);
+  }
+
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 8px;
+  }
+
+  li {
+    position: relative;
+    padding-left: 18px;
+    color: var(--ink-soft);
+  }
+
+  li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0.68em;
+    width: 8px;
+    height: 1.5px;
+    background: var(--accent);
+  }
+
+  /* ============ practice / projects ============ */
+
+  .item { break-inside: avoid; }
+  .item + .item { margin-top: 18px; }
+
+  .item h3 {
+    margin: 0 0 4px;
+    font-size: 1.02rem;
+    font-weight: 700;
+    letter-spacing: -0.006em;
+  }
+
+  .project h3 {
+    font-family: var(--f-display);
+    font-size: 1.28rem;
+    font-weight: 600;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 10px;
+  }
+
+  .project h3 span {
+    font-family: var(--f-mono);
+    font-size: 0.64rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-weight: 400;
+  }
+
+  .project + .project { margin-top: 24px; }
+
+  .project ul { margin: 10px 0 0; }
+
+  .tech {
+    font-family: var(--f-mono);
+    font-size: 0.74rem;
+    color: var(--muted);
+    margin: 12px 0 0;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule-soft);
+  }
+
+  .item h3 + p { margin-top: 0; }
+
+  /* ============ technical ============ */
+
+  .skill { break-inside: avoid; }
+  .skill + .skill { margin-top: 13px; }
+
+  .skill dt {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--ink);
+    margin-bottom: 2px;
+  }
+
+  .skill dd {
+    margin: 0;
+    font-family: var(--f-mono);
+    font-size: 0.79rem;
+    line-height: 1.7;
+    color: var(--ink-soft);
+  }
+
+  /* ============ toolbar ============ */
+
+  .toolbar {
+    position: fixed;
+    top: 14px;
+    right: 14px;
+    z-index: 20;
+    display: flex;
+    gap: 8px;
+  }
+
+  .toolbar button {
+    font-family: var(--f-mono);
+    font-size: 0.66rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    border-radius: 999px;
+    padding: 7px 13px;
+    cursor: pointer;
+  }
+
+  .toolbar button:hover { color: var(--accent); border-color: var(--accent); }
+
+  :where(a, button):focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ============ responsive ============ */
+
+  @media (max-width: 720px) {
+    .head { grid-template-columns: minmax(0, 1fr); }
+    .head-contact { text-align: left; }
+    .head-contact a { margin-left: 0; }
+    .row { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+    .row-body { border-left: 0; padding-left: 0; }
+    h1 { font-size: 2.1rem; }
+  }
+
+  /* ============ print → PDF ============ */
+
+  @page { size: A4; margin: 13mm 12mm; }
+
+  @media print {
+    :root {
+      --paper:#FFFFFF; --ink:#0F1619; --ink-soft:#3A474C; --muted:#6C7B81;
+      --rule:#D7DFE0; --rule-soft:#E5EAEB; --accent:#0D5F67;
+      color-scheme: light;
+    }
+    body { background: #fff; font-size: 10.2pt; line-height: 1.45; }
+    .toolbar { display: none; }
+    .sheet { margin: 0; max-width: none; padding: 0; box-shadow: none; }
+    h1 { font-size: 24pt; }
+    .head-sub { font-size: 10.5pt; }
+    .head-contact { font-size: 8.4pt; line-height: 1.7; }
+    .head-contact a { color: var(--accent); }
+    .lede { font-size: 11.6pt; }
+    .job h2 { font-size: 11.6pt; }
+    .project h3 { font-size: 12.6pt; }
+    .row { padding-top: 15px; margin-top: 15px; }
+    .row-label { font-size: 7.4pt; }
+    .tech, .skill dd { font-size: 8.2pt; }
+    a { text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <button id="print-btn" type="button">Save as PDF</button>
+  <button id="theme-toggle" type="button" aria-label="Switch colour theme">Theme</button>
+</div>
+
+<main class="sheet">
+
+  <header class="head">
+    <div>
+      <h1>Muhammad Awais</h1>
+      <p class="head-sub">Full-Stack Engineer &amp; Software Architect — React interfaces, backend systems, production infrastructure, and the abstractions that hold a large codebase together.</p>
+    </div>
+    <div class="head-contact">
+      <a href="mailto:awaiswork803@gmail.com">awaiswork803@gmail.com</a>
+      <a href="https://github.com/dragsense" target="_blank" rel="noopener noreferrer">github.com/dragsense</a>
+      <a href="https://www.linkedin.com/in/muhammad-awias-b58559438" target="_blank" rel="noopener noreferrer">linkedin.com/in/muhammad-awias</a>
+      <span>Islamabad, PK · remote-friendly</span>
+    </div>
+  </header>
+
+  <section class="row">
+    <p class="row-label">Profile</p>
+    <div class="row-body">
+      <p class="lede">I take software from a business requirement to a running production system — architecture, backend, frontend, database, infrastructure, deployment, and the debugging that happens after launch.</p>
+      <p>Six years across product engineering — <strong>20+ websites and 5+ full-stack applications running in production</strong> — now focused on systems where the backend owns real business rules rather than shuttling database rows: multi-tenancy, billing and subscription lifecycles, queue-backed processing, and audit trails. On the frontend I build data-dense React applications — dashboards, tables, filtering and multi-step forms — against typed API contracts shared with the server. I design for the second year of a codebase — shared contracts and composable feature bundles that make the tenth feature cheaper than the third — and I pair that with AI-assisted development, including production MCP server implementation.</p>
+    </div>
+  </section>
+
+  <section class="row">
+    <p class="row-label">Experience</p>
+    <div class="row-body">
+
+      <article class="job">
+        <h2><b>Senior Full-Stack Engineer — Octathorn</b> · NASTP, Rawalpindi</h2>
+        <p class="job-date">2024 — Present</p>
+        <ul>
+          <li>Lead engineer across the company's product portfolio, owning work from domain design through to production infrastructure.</li>
+          <li>Set the engineering conventions the codebase runs on — contracts-first package boundaries, composable feature bundles, and cross-cutting concerns built as shared infrastructure rather than per-feature code.</li>
+          <li>Manage the team's GitHub organisation — repository structure, branching and review workflow, and access — so several products stay consistent and releasable.</li>
+          <li>Own the deployment and production layer end to end: Dockerised services on AWS EC2 behind Nginx, staging and production environments, database and file custody, and live incident debugging.</li>
+          <li>Build the product frontends in <strong>React and TypeScript</strong> — admin dashboards, server-side data tables with filtering, sorting and pagination, multi-step forms with schema validation, role-driven navigation, and file upload with live progress.</li>
+          <li>Maintain a shared component and form layer on Tailwind and shadcn/ui — design tokens, theming, accessible dialogs and data views — so every product looks and behaves consistently instead of restyling per feature.</li>
+          <li>Keep the client fast and correct: server-state caching with TanStack Query, code splitting and lazy routes, optimistic updates, and SSR/static marketing sites in Astro alongside the app.</li>
+          <li>Introduced <strong>MCP-based agent tooling and AI-assisted development</strong> into the team's delivery process, with repo conventions written as agent-readable rules.</li>
+          <li>Built the <strong>contracts-first platform foundation</strong> the products are built on — one monorepo where API and client compile against shared types, with tenancy, RBAC, caching, events, activity logs and file storage as a shared layer, plus a deploy CLI and Nginx/Docker gateway. A new product starts with deployment, environments, auth and access control already solved.</li>
+          <li>Delivered <strong>5+ full-stack products</strong> on it: multi-tenant SaaS platforms with isolated workspaces and role-based access, and scheduled data-transfer and reporting systems with operations dashboards.</li>
+        </ul>
+      </article>
+
+      <article class="job">
+        <h2><b>Full-Stack Developer — Digital Street</b> · Dubai-based company · onsite</h2>
+        <p class="job-date">2020 — 2024</p>
+        <ul>
+          <li>Delivered <strong>20+ client and in-house websites and web applications</strong> across the full stack, from requirements through to deployment and post-launch support.</li>
+          <li>Built responsive, cross-browser interfaces from design files — semantic HTML, modern CSS layout, accessible forms and components — in React and Angular as well as server-rendered pages.</li>
+          <li>Built the breadth the rest of my work rests on — core web technologies, several frontend frameworks and both relational and document databases — moving from feature work to owning whole systems.</li>
+          <li>Worked directly with stakeholders to turn business requirements into technical scope, and maintained delivered systems in production.</li>
+        </ul>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="row">
+    <p class="row-label">Practice</p>
+    <div class="row-body">
+
+      <article class="item">
+        <h3>Composable feature bundles over copy-paste</h3>
+        <p>Each feature exports pure operation cores, then publishes reusable bundles that pages compose. A billing section — list, filters, row actions, modals, import, backups — is defined once and mounted by three pages, scoped differently each time, with duplicate registrations rejected at compose time.</p>
+      </article>
+
+      <article class="item">
+        <h3>Type-safe frontends against shared contracts</h3>
+        <p>The client imports the same types and schemas the server validates with, so an API change surfaces as a compile error in the UI rather than a runtime blank screen. Forms, tables and query hooks are generated from those contracts instead of being hand-typed per screen.</p>
+      </article>
+
+      <article class="item">
+        <h3>Cross-cutting concerns as infrastructure</h3>
+        <p>Tenancy, permissions, caching, activity logging, events, validation, file storage and HTTP error shaping live in one shared layer with pluggable providers — a decorator away from any feature.</p>
+      </article>
+
+      <article class="item">
+        <h3>Security as default infrastructure</h3>
+        <p>Defence in depth built into the shared layer rather than per feature: <strong>AES-256-GCM</strong> response encryption and field-level encryption at rest, CSRF double-submit tokens, Helmet CSP and HSTS, a strict CORS allowlist, and layered authentication, permission and tenant-scope guards. Secure is the default; exceptions are explicit per-route opt-outs.</p>
+      </article>
+
+      <article class="item">
+        <h3>Production debugging across the stack</h3>
+        <p>Tracing symptoms that look like application bugs to their real layer: container networking, live-data migrations, reverse-proxy and DNS misconfiguration, mail routing, and malformed third-party payloads.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="row">
+    <p class="row-label">AI engineering</p>
+    <div class="row-body">
+
+      <article class="item">
+        <h3>MCP servers</h3>
+        <p>Built a production NestJS <strong>Model Context Protocol</strong> server — HTTP and stdio transports, a tool registry, and typed tools/resources/prompts reaching the Nest API through an authenticated client.</p>
+      </article>
+
+      <article class="item">
+        <h3>AI-assisted delivery</h3>
+        <p>Daily use of <strong>Claude, Claude Code and Cursor</strong> for implementation, debugging and prototyping, with repo conventions written as agent-readable rules. <strong>n8n</strong> for AI-backed automation.</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="row">
+    <p class="row-label">Projects</p>
+    <div class="row-body">
+
+      <article class="project">
+        <h3>Payback Billing</h3>
+        <p>A multi-tenant billing platform serving multiple businesses from one system, owned from architecture through to live operation.</p>
+        <ul>
+          <li>Runs the full commercial cycle — clients, subscriptions, invoicing, multi-currency pricing, purchasing, inventory and support.</li>
+          <li>Every business's data and permissions kept fully separate.</li>
+          <li>React admin interface: data tables with server-side filtering and pagination, invoice and subscription forms, dashboards, and background-job progress reported live over WebSockets.</li>
+          <li>Deployed on AWS and migrated between hosting providers with no data loss.</li>
+        </ul>
+        <p class="tech">TypeScript · NestJS · PostgreSQL · Redis · React · TanStack Query · Tailwind · Docker · AWS</p>
+      </article>
+
+      <article class="project">
+        <h3>DragSense <span>Blueprint-driven application platform · Creator</span></h3>
+        <p>A platform that lets non-developers build working applications — CRMs, dashboards and internal tools — by describing their data and rules instead of writing code. Each organisation gets an isolated workspace with its own roles, branding and permissions. The React frontend renders itself at runtime from those definitions — forms, tables, detail views and permission-aware navigation are generated from the blueprint rather than coded per entity.</p>
+        <p class="tech">NestJS · PostgreSQL · MongoDB · React · Tailwind</p>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="row">
+    <p class="row-label">Exploration</p>
+    <div class="row-body">
+      <article class="item">
+        <h3>Procedural character animation — Unity, cricket simulation</h3>
+        <p>An ongoing side build where the character's body adapts to its actual environment instead of replaying fixed clips: layered inverse kinematics for foot placement and ground adaptation, hand targets, head aim, and driven hip, chest and shoulder adjustment — working directly in quaternion rotation, transform-space conversion and runtime interpolation to keep joint chains stable through movement, jumping and diving. Kept up because the hard problems there are nothing like the ones at work.</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="row">
+    <p class="row-label">Technical</p>
+    <div class="row-body">
+      <dl style="margin:0">
+        <div class="skill"><dt>Languages</dt><dd>TypeScript · JavaScript · SQL · C#</dd></div>
+        <div class="skill"><dt>Backend</dt><dd>NestJS · Node.js · TypeORM · REST · OpenAPI · Socket.IO · Bull queues · JWT &amp; RBAC · Zod</dd></div>
+        <div class="skill"><dt>Web</dt><dd>HTML5 · CSS3 · responsive design · accessibility · REST &amp; WebSockets · authentication flows · SSR &amp; static generation · web performance</dd></div>
+        <div class="skill"><dt>Frontend</dt><dd>React · React Router v7 · Angular · TanStack Query &amp; Table · Zustand · React Hook Form · Tailwind · shadcn/ui · Vite · Astro</dd></div>
+        <div class="skill"><dt>Data</dt><dd>PostgreSQL · Redis · MongoDB · relational modelling · JSONB · migrations · backup &amp; restore</dd></div>
+        <div class="skill"><dt>Infrastructure</dt><dd>Docker &amp; Compose · Linux · Nginx · AWS EC2 · DNS · SSL/TLS · Let's Encrypt · SSH · GitHub Actions</dd></div>
+        <div class="skill"><dt>AI</dt><dd>MCP server development · Claude · Claude Code · Cursor · prompt engineering · n8n</dd></div>
+        <div class="skill"><dt>Practice</dt><dd>monorepo architecture · pnpm workspaces · shared contracts · Git &amp; GitHub org management · code review · release &amp; environment ownership · Vitest</dd></div>
+        <div class="skill"><dt>Simulation</dt><dd>Unity · Animation Rigging · procedural IK</dd></div>
+      </dl>
+    </div>
+  </section>
+
+</main>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var saved = null;
+    try { saved = localStorage.getItem('awais-theme'); } catch (e) { saved = null; }
+    if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+
+    document.getElementById('theme-toggle').addEventListener('click', function () {
+      var current = root.getAttribute('data-theme');
+      var next;
+      if (current) {
+        next = current === 'dark' ? 'light' : 'dark';
+      } else {
+        next = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'light' : 'dark';
+      }
+      root.setAttribute('data-theme', next);
+      try { localStorage.setItem('awais-theme', next); } catch (e) {}
+    });
+
+    document.getElementById('print-btn').addEventListener('click', function () {
+      window.print();
+    });
+  })();
+</script>
+
+</body>
+</html>
